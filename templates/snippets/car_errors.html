@@ -1,0 +1,30 @@
+{% load static %}
+<div class="col-md-3 ">
+    <div class="firstblock classificationcontainer">
+      <p class="classy"><span style="font-size: 30px;color:rgb(243, 243, 243) ; font-weight: 700;">C</span>heck
+        Engine</p>
+      <div class="">
+        {% for error in car_detail.car_diagnostic_set.all|slice:"0:2"  %}
+          <div class="textawy1 p-2 my-2">
+            <h5 class="textawy px-2 py-1">{{error.diagnostic_sarial}}</h5>
+            <p class="px-4" style="font-size:13px;text-align:justify">{{error.diagnostic_error_type}}</p>
+          </div>
+        {% endfor %}
+      </div>
+      
+    </div>
+    <div class="firstblock classificationcontainer my-5">
+      <p class="classy"><span
+          style="font-size: 30px;color:rgb(253, 253, 253) ; font-weight: 700;">N</span>otification</p>
+      <div class="textawy1 p-2 my-2">
+        <p style="float: right; color: #ffffff;">Time</p>
+        <h5 class="textawy px-2 py-1">P0420</h5>
+        <p class="blocktext px-4">datacolumn</p>
+      </div>
+      <div class="textawy1 p-2 my-2">
+        <p style="float: right; color: #ffffff;">Time</p>
+        <h5 class="textawy px-2 py-1">P0420</h5>
+        <p class="blocktext px-4">datacolumn</p>
+      </div>
+    </div>
+  </div>

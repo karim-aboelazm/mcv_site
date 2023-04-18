@@ -1,0 +1,47 @@
+{% load static %}
+
+<div id="mySidebar" class="sidebar">
+    <a href="javascript:void(0)" class="closebtn" onclick="closeNav()">&#9932;</a>
+    
+    <div class="aspace">
+        {% if all_cars %}
+            {% for car in all_cars  %}
+                <p>
+                    <form class="search_form" id="form1" method="GET">
+                        <input type="text" value="{{car.car_id}}" name="carname" class="form-control" style="display:none">
+                        <input type="submit" value="bus_{{car.car_id}}" onclick="submitforms()" style="background:none;border:none">
+                    </form> 
+                </p>
+            {% endfor %}
+        {% else %}
+            <p>No Busses</p>
+        {% endif %}
+    </div>
+</div>
+
+
+<div id="main">
+    <button class="openbtn" onclick="openNav()" style="position: relative;top: 352px; left:-10px;">&#10148;</button>
+</div>
+
+
+<div class="container-fluid">
+    <div class="row">
+      <div class="col-md-3">
+        <h4 class="bigw">W</h4>
+        <div class="changepose">
+          <h5 class="welcome">Welcome</h5>
+          <div class="bus-id">
+            <p class="bus-id-data">Bus ID : 098376746476</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+      </div>
+      <div class="col-md-2 mapic">
+        <img src="{% static '' %}img/img.png" alt="">
+      </div>
+    </div>
+</div>
+
+  
