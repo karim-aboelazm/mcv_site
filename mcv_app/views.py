@@ -12,7 +12,11 @@ class MCVRequiredMixin(object):
         else:
             return redirect('/dashboard/?carname=1')
         return super().dispatch(request, *args, **kwargs)
-    
+
+class SplashPageView(TemplateView):
+    template_name = 'spalsh_page.html'    
+
+
 
 class HomePageView(MCVRequiredMixin,TemplateView):
     template_name = "home.html"

@@ -5,7 +5,8 @@ from . import api
 app_name = 'mcv_app'
 
 urlpatterns = [
-    path("", McvUserLogin.as_view(), name="mcv_login"),
+    path("", SplashPageView.as_view(), name="splash"),
+    path("login/", McvUserLogin.as_view(), name="mcv_login"),
     path('home/',HomePageView.as_view(),name='home'),
     path("dashboard/", DashBoardPageView.as_view(), name="dashboard"),
       # cars Api url
