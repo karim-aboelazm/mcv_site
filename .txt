@@ -1,7 +1,0 @@
-- src
-    - Templates (.html)
-    - Static    (.js,img,.css)
-    - media     (img from db)
-    - project
-    - app
-    
