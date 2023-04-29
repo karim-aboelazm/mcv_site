@@ -23,21 +23,4 @@ ul.actionlist li {
     list-style-type: none;
     overflow: hidden;
     text-overflow: ellipsis;
-    margin-left: 50%;
 }
-.chart--container {
-    display: inline-block;
-    min-height: 530px;
-    width: 49%;
-    height: 100%;
-    margin-right: 10%;
-  }
-  
-  .zc-ref {
-    display: none;
-    
-  }
-  
-
-
-
