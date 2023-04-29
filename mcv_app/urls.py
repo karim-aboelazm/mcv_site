@@ -6,9 +6,11 @@ app_name = 'mcv_app'
 
 urlpatterns = [
     path("", SplashPageView.as_view(), name="splash"),
-    path("login/", McvUserLogin.as_view(), name="mcv_login"),
+    path("admin-login/", McvUserLogin.as_view(), name="mcv_admin_login"),
+    path("driver-login/", McvDriverLogin.as_view(), name="mcv_driver_login"),
     path('home/',HomePageView.as_view(),name='home'),
-    path("dashboard/", DashBoardPageView.as_view(), name="dashboard"),
+    path("dashboard/<int:pk>/", DashBoardPageView.as_view(), name="dashboard"),
+    path("driver-car-detail/", DriverDashBoardPageView.as_view(), name="driver_dashboard"),
       # cars Api url
     path("api/car-list/", api.CarListApi.as_view(), name="api_car_list"),
     path("api/car-detail/<int:pk>", api.CarDetailApi.as_view(), name="api_car_detail"),

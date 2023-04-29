@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+{% load static %}
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -10,7 +11,7 @@
 <body>
   <div class="splash">
     <div class="splash_logo">
-      MCV
+      <img src="{% static '' %}img/splash.jpg" style="width:100%;" alt="">
     </div>
     <div class="splash_svg">
       <svg width="100%" height="100%">
@@ -24,9 +25,9 @@
     </div>
   </div>
   <div class="text">
-    <p>Follow</p>
-    <p>My Ride</p>
-    <button><a href="{% url 'mcv:mcv_login'%}">Get Start</a></button>
+    <img src="{% static '' %}img/splash2.png" style="width:100%;" alt="">
+    
+    <button><a href="{% url 'mcv:mcv_driver_login'%}">Get Start</a></button>
   </div>
 </body>
 </html>

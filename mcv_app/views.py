@@ -1,43 +1,59 @@
 from django.shortcuts import render,redirect
-from django.views.generic import TemplateView,FormView
+from django.views.generic import TemplateView,FormView,DetailView
 from django.contrib.auth import authenticate , login ,logout
 from .models import *
 from .forms import *
-
-
-class MCVRequiredMixin(object):
-    def dispatch(self, request, *args, **kwargs):
-        if request.user.is_authenticated and MCVUser.objects.filter(user=request.user).exists():
-            pass
-        else:
-            return redirect('/dashboard/?carname=1')
-        return super().dispatch(request, *args, **kwargs)
-
+import requests
 class SplashPageView(TemplateView):
     template_name = 'spalsh_page.html'    
 
 
+class MCVAdminRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and MCVUser.objects.filter(user=request.user).exists():
+            pass
+        else:
+            return redirect('/home/')
+        return super().dispatch(request, *args, **kwargs)
 
-class HomePageView(MCVRequiredMixin,TemplateView):
-    template_name = "home.html"
+class MCVDriverRequiredMixin(object):
+    def dispatch(self, request, *args, **kwargs):
+        if request.user.is_authenticated and Driver.objects.filter(user=request.user).exists():
+            pass
+        else:
+            return redirect('/driver-car-detail/')
+        return super().dispatch(request, *args, **kwargs)
 
-
-class DashBoardPageView(MCVRequiredMixin,TemplateView):
-    template_name = 'dashboard.html'
+class HomePageView(MCVAdminRequiredMixin,TemplateView):
+    template_name = "dashboard.html"
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)
-        # print("Connected...")
-        kw = self.request.GET.get("carname")
+        context["car-detail"] =  Car.objects.latest('id')
         context["all_cars"] = Car.objects.all().order_by("-id")
-        context["car_detail"] = Car.objects.get(car_id=kw) if kw else None
+        return context
+    
+
+class DashBoardPageView(MCVAdminRequiredMixin,DetailView):
+    template_name = 'dashboard.html'
+    model = Car
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_admin_user = MCVUser.objects.get(user=self.request.user)
+        context["all_cars"] = Car.objects.all().order_by("-id")
+        context["car_detail"] = Car.objects.get(id=self.kwargs['pk'])
         context["driver"] = Driver.objects.get(drive_car=context["car_detail"].id) if context["car_detail"] != None else None
-        context["last_cars"] = Car.objects.all().exclude(car_id=kw) if kw else None
+        context["last_cars"] = Car.objects.all().exclude(id=self.kwargs['pk'])
+        context["lon_src"] = float(current_admin_user.Longitude)  
+        context["lat_src"] = float(current_admin_user.Latitude )
+        context["lon_des"] = float(context["car_detail"].Longitude) 
+        context["lat_des"] = float(context["car_detail"].Latitude) 
+        print(context["lon_src"],context["lat_src"],context["lon_des"],context["lat_des"])
         return context
 
 class McvUserLogin(FormView):
     template_name = "mcv_user_login.html"
     form_class = McvUserLoginForm
-    success_url = '/dashboard/?carname=1'
+    success_url = '/home/'
     
     def form_valid(self, form):
         user_name = form.cleaned_data.get('username')
@@ -48,6 +64,28 @@ class McvUserLogin(FormView):
         else:
             return render(self.request,self.template_name,{'form':self.form_class})
         return super().form_valid(form)
-    
 
+class McvDriverLogin(FormView):
+    template_name= "mcv_driver_login.html"
+    form_class = McvDriverLoginForm
+    success_url = '/driver-car-detail/'
+    def form_valid(self,form):
+        user_name = form.cleaned_data.get('username')
+        pass_word = form.cleaned_data['password']
+        usr = authenticate(username=user_name,password=pass_word)
+        if usr is not None and Driver.objects.filter(user=usr).exists():
+            login(self.request, usr)
+        else:
+            return render(self.request,self.template_name,{'form':self.form_class})
+        return super().form_valid(form)
 
+class DriverDashBoardPageView(MCVDriverRequiredMixin,TemplateView):
+    template_name = 'dashboard.html'
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        current_driver = self.request.user
+        context["driver"] = Driver.objects.get(user=current_driver)
+        context["car_detail"] = context["driver"].drive_car
+        context["long"] = 31.564493599999988
+        context["lat"] = 30.4338749
+        return context
