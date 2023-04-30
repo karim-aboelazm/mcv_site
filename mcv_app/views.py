@@ -47,7 +47,6 @@ class DashBoardPageView(MCVAdminRequiredMixin,DetailView):
         context["lat_src"] = float(current_admin_user.Latitude )
         context["lon_des"] = float(context["car_detail"].Longitude) 
         context["lat_des"] = float(context["car_detail"].Latitude) 
-        print(context["lon_src"],context["lat_src"],context["lon_des"],context["lat_des"])
         return context
 
 class McvUserLogin(FormView):
@@ -86,6 +85,6 @@ class DriverDashBoardPageView(MCVDriverRequiredMixin,TemplateView):
         current_driver = self.request.user
         context["driver"] = Driver.objects.get(user=current_driver)
         context["car_detail"] = context["driver"].drive_car
-        context["long"] = 31.564493599999988
-        context["lat"] = 30.4338749
+        context["lon_des"] = float(context["car_detail"].Longitude) 
+        context["lat_des"] = float(context["car_detail"].Latitude)
         return context
