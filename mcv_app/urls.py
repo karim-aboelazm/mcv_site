@@ -27,4 +27,6 @@ urlpatterns = [
     path("api/admin-list/", api.AdminListApi.as_view(), name="api_admins_list"),
     path("api/admin-detail/<int:pk>",api.AdminDetailApi.as_view(),name="api_admins_list"),
     path("api/admin-filter/<str:kw>",api.AdminFilterApi.as_view(),name="api_admins_filter"),
+    
+    path('api/my-car/<int:pk>/', api.CarDriverUpdateView.as_view(), name='car-driver-update'),
 ]

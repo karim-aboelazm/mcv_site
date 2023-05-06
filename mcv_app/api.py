@@ -107,3 +107,52 @@ class AdminFilterApi(APIView):
             Q(full_name__icontains=kw))
         serializer = McvUserSerializer(admin,many=True,context={'request':request})
         return Response({'mcv_user_filter':serializer.data})
+
+  # Update car fields
+        car.car_speed       = request.data.get('car_speed', car.car_speed)
+        car.car_rpm         = request.data.get('car_rpm', car.car_rpm)
+        car.car_run_time    = request.data.get('car_run_time', car.car_run_time)
+        car.car_tempreture  = request.data.get('car_tempreture', car.car_tempreture)
+        car.car_engine_load = request.data.get('car_engine_load', car.car_engine_load)
+        car.car_distance    = request.data.get('car_distance', car.car_distance)
+        car.save()
+
+        # Update driver action
+        driver = car.drive_car
+        driver.driver_action = request.data.get('driver_action', driver.driver_action)
+        driver.save()
+
+        return Response(status=status.HTTP_200_OK)
+    
+class CarDriverUpdateView(RetrieveUpdateDestroyAPIView):
+    permission_classes = [IsAuthenticated]
+    serializer_class = CarSerializer
+    queryset = Car.objects.all()
+
+    def put(self, request, *args, **kwargs):
+        car = self.get_object()
+        driver = Driver.objects.get(drive_car=car)
+
+        # Update car_speed, car_rpm, and car_distance from request data
+        car.car_speed       = request.data.get('car_speed', car.car_speed)
+        car.car_rpm         = request.data.get('car_rpm', car.car_rpm)
+        car.car_run_time    = request.data.get('car_run_time', car.car_run_time)
+        car.car_tempreture  = request.data.get('car_tempreture', car.car_tempreture)
+        car.car_engine_load = request.data.get('car_engine_load', car.car_engine_load)
+        car.car_distance    = request.data.get('car_distance', car.car_distance)
+        car.save()
+
+        # Update driver_action from request data
+        driver.driver_action = request.data.get('driver_action', driver.driver_action)
+        driver.save()
+
+        # Serialize updated car and driver objects
+        serializer = self.get_serializer_class()
+        car_serializer = serializer(car)
+        driver_serializer = DriverSerializer(driver)
+
+        # Return serialized data
+        return Response({
+            'car': car_serializer.data,
+            'driver': driver_serializer.data,
+        })
