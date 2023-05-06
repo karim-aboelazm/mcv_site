@@ -81,11 +81,9 @@ class DriverFilterApi(APIView):
 
     def get(eslf, request, kw, format=None):
         driver = Driver.objects.filter(
-            Q(driver_name__icontains=kw)
-            | Q(driver_age__icontains=kw)
-            | Q(driver_ssn__icontains=kw)
-            | Q(driver_action__icontains=kw)
-            | Q(driver_phone__icontains=kw)
+            
+            Q(drive_car__car_id__icontains=kw)
+            
         )
         serializer = DriverSerializer(driver, many=True)
         return Response({"driver_filter": serializer.data})
